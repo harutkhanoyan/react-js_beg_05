@@ -9,15 +9,21 @@
   height: 450px;
 }
 
-.card {
+.task {
   margin-top: 50px;
+  border: black 3px solid;
   text-align: center;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color:rgb(235, 151, 151);
+  width: 200px;
 }
 
 .card.active {
   background-color: rgb(185, 231, 206);
+}
+
+h1 {
+  text-align: center;
+}
+.divInput{
+  text-align: center;
 }
 

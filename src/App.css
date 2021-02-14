@@ -9,13 +9,6 @@
   height: 450px;
 }
 
-.task {
-  margin-top: 50px;
-  border: black 3px solid;
-  text-align: center;
-  width: 200px;
-}
-
 .card.active {
   background-color: rgb(185, 231, 206);
 }

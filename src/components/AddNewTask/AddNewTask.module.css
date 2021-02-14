@@ -1,0 +1,17 @@
+.buttonAdd {
+  background-color: rgb(47, 0, 90);
+  border: none;
+  width: 70px;
+  height: 30px;
+  color: rgb(165, 163, 42);
+  border-radius: 20px;
+}
+
+.buttonAdd:hover{
+  background-color:rgb(69, 0, 133);
+}
+
+.inputAdd {
+  border-radius: 20px;
+  height: 30px;
+}

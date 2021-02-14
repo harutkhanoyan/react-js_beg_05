@@ -1,6 +1,6 @@
 import './App.css';
 
-import ToDo from './components/ToDo';
+import ToDo from './components/ToDo/ToDo';
 
 
 

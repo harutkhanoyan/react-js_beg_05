@@ -1,0 +1,9 @@
+.task {
+  background-color: rgb(70, 120, 153);
+  margin-top: 50px;
+  border: rgb(255, 225, 225) 5px solid;
+  text-align: center;
+  width: 200px;
+  border-radius: 10%;
+  color: rgb(165, 163, 42);
+}

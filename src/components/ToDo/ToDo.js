@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Task from './Task';
-import AddNewTask from './AddNewTask';
+import Task from '../Task/Task';
+import AddNewTask from '../AddNewTask/AddNewTask';
 
 
 class ToDo extends Component {
@@ -9,7 +9,12 @@ class ToDo extends Component {
   }
   
   handleSubmit = (value) => {
-    console.log("value", value);
+    if(!value) return;
+    const tasks = [...this.state.tasks];
+    tasks.push(value);
+    this.setState({
+      tasks
+    })
   }
 
   render() {

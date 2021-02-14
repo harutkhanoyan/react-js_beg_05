@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Task from '../Task/Task';
 import AddNewTask from '../AddNewTask/AddNewTask';
+import idGenerator from '../../helpers/idGenerator'
+
+import { Container, Row, Col } from 'react-bootstrap';
 
 
 class ToDo extends Component {
@@ -28,8 +31,14 @@ class ToDo extends Component {
       <div>
         <h1>ToDo</h1>
         <AddNewTask handleSubmit={this.handleSubmit} />
-        <div className="container">
-          {Tasks}
+        <div >
+          <Container>
+            <Row>
+              <Col key={idGenerator()} >
+                {Tasks}
+              </Col>
+            </Row>
+          </Container>
         </div>
       </div>
     )

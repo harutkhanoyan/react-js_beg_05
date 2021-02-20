@@ -1,13 +1,14 @@
-import styles from './Task.module.css'
+import styles from './Task.module.css';
 
-function Task({task}) {
+function Task({ task, handleDeleteTask }) {
   return (
     <div className={styles.task}>
           <p>
-            {task}
+            {task.title}
           </p>
+          <button onClick={() => handleDeleteTask(task._id)} >Remove</button>
         </div>
   )
 }
-
+                                              
 export default Task;

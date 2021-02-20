@@ -12,18 +12,24 @@ class AddNewTask extends Component {
 
   handleChange = (e) => {
     this.setState({
-      inputValue: e.target.value
+      inputValue: e.target.value,
     })
   }
 
-  render() {
+  handleS = ({key , type}) => {
+    if (type === "keypress" && key !== "Enter") return;
 
-    const handleS = () => {
-      this.props.handleSubmit(this.state.inputValue);
-      this.setState({
-        inputValue: ""
-      })
-    }
+    const { inputValue } = this.state;
+    const { handleSubmit } =this.props;
+
+    handleSubmit(inputValue);
+    this.setState({
+      inputValue: ""
+    })
+  }
+  
+
+  render() {
 
     return (
       <div className="divInput" >
@@ -33,10 +39,11 @@ class AddNewTask extends Component {
           placeholder="Add task"
           onChange={this.handleChange}
           value={this.state.inputValue}
+          onKeyPress={this.handleS}
         />
         <button 
         className={styles.buttonAdd}
-        onClick={handleS}
+        onClick={this.handleS}
          >Add</button>
       </div>
     )

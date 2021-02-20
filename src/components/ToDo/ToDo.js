@@ -8,22 +8,52 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 class ToDo extends Component {
   state = {
-    tasks: ["task1", "task2", "task3"],
+    tasks: [
+      {
+        _id: idGenerator(),
+        title: "Task1"
+      },
+      {
+        _id: idGenerator(),
+        title: "Task2"
+      },
+      {
+        _id: idGenerator(),
+        title: "Task3"
+      }
+    ],
   }
-  
+
   handleSubmit = (value) => {
-    if(!value) return;
+    if (!value) return;
     const tasks = [...this.state.tasks];
-    tasks.push(value);
+    tasks.push({
+      _id: idGenerator(),
+      title: value
+    });
+    this.setState({
+      tasks
+    })
+  }
+
+  handleDeleteTask = (id) =>{
+    let tasks = [...this.state.tasks];
+    tasks = tasks.filter(item => item._id !== id)
+
     this.setState({
       tasks
     })
   }
 
   render() {
-    const Tasks = this.state.tasks.map((task, index) => {
-      return (
-         <Task task={task} key={index} />
+    const { tasks } = this.state;
+    const Tasks = tasks.map(task => {
+      return(
+        <Col
+          key={task._id}
+        >
+          <Task task={task} handleDeleteTask={this.handleDeleteTask} />
+        </Col>
       )
     })
 
@@ -34,9 +64,7 @@ class ToDo extends Component {
         <div >
           <Container>
             <Row>
-              <Col key={idGenerator()} >
-                {Tasks}
-              </Col>
+              {Tasks}
             </Row>
           </Container>
         </div>

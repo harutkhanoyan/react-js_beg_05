@@ -22,6 +22,7 @@ class ToDo extends Component {
         title: "Task3"
       }
     ],
+    removeTasks: []
   }
 
   handleSubmit = (value) => {
@@ -36,7 +37,7 @@ class ToDo extends Component {
     })
   }
 
-  handleDeleteTask = (id) =>{
+  handleDeleteTask = (id) => {
     let tasks = [...this.state.tasks];
     tasks = tasks.filter(item => item._id !== id)
 
@@ -45,14 +46,42 @@ class ToDo extends Component {
     })
   }
 
+  toggleSetRemoveTasksId = (_id) => {
+    let removeTasks = [...this.state.removeTasks];
+    if (removeTasks.includes(_id)) {
+      removeTasks = removeTasks.filter(id => id !== _id);
+    } else {
+      removeTasks.push(_id);
+    }
+
+    this.setState({
+      removeTasks
+    });
+  }
+
+  removeSelcdedTasks = () => {
+    let tasks = [...this.state.tasks];
+    const removeTasks = [...this.state.removeTasks];
+    tasks = tasks.filter(item => !removeTasks.includes(item._id));
+
+    this.setState({
+      tasks,
+      removeTasks: []
+    });
+  }
+
   render() {
-    const { tasks } = this.state;
+    const { tasks, removeTasks } = this.state;
     const Tasks = tasks.map(task => {
-      return(
+      return (
         <Col
           key={task._id}
         >
-          <Task task={task} handleDeleteTask={this.handleDeleteTask} />
+          <Task
+            task={task}
+            handleDeleteTask={this.handleDeleteTask}
+            toggleSetRemoveTasksId={this.toggleSetRemoveTasksId}
+            disabled={!!removeTasks.length} />
         </Col>
       )
     })
@@ -60,11 +89,20 @@ class ToDo extends Component {
     return (
       <div>
         <h1>ToDo</h1>
-        <AddNewTask handleSubmit={this.handleSubmit} />
+        <AddNewTask
+          disabled={!!removeTasks.length}
+          handleSubmit={this.handleSubmit} />
         <div >
           <Container>
             <Row>
               {Tasks}
+            </Row>
+            <Row>
+              <Col>
+                <button
+                  disabled={!!!removeTasks.length} 
+                  onClick={this.removeSelcdedTasks}>Remove Selecded</button>
+              </Col>
             </Row>
           </Container>
         </div>

@@ -16,18 +16,18 @@ class AddNewTask extends Component {
     })
   }
 
-  handleS = ({key , type}) => {
+  handleS = ({ key, type }) => {
     if (type === "keypress" && key !== "Enter") return;
 
     const { inputValue } = this.state;
-    const { handleSubmit } =this.props;
+    const { handleSubmit } = this.props;
 
     handleSubmit(inputValue);
     this.setState({
       inputValue: ""
     })
   }
-  
+
 
   render() {
 
@@ -40,11 +40,13 @@ class AddNewTask extends Component {
           onChange={this.handleChange}
           value={this.state.inputValue}
           onKeyPress={this.handleS}
+          disabled={this.props.disabled}
         />
-        <button 
-        className={styles.buttonAdd}
-        onClick={this.handleS}
-         >Add</button>
+        <button
+          disabled={this.props.disabled}
+          className={styles.buttonAdd}
+          onClick={this.handleS}
+        >Add</button>
       </div>
     )
   }

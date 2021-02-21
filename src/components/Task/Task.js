@@ -1,14 +1,19 @@
 import styles from './Task.module.css';
 
-function Task({ task, handleDeleteTask }) {
+function Task({ task, handleDeleteTask, toggleSetRemoveTasksId, disabled }) {
   return (
     <div className={styles.task}>
-          <p>
-            {task.title}
-          </p>
-          <button onClick={() => handleDeleteTask(task._id)} >Remove</button>
-        </div>
+      <input
+        type="checkbox"
+        onClick={() => toggleSetRemoveTasksId(task._id)} />
+      <p>
+        {task.title}
+      </p>
+      <button
+      disabled={disabled} 
+      onClick={() => handleDeleteTask(task._id)} >Remove</button>
+    </div>
   )
 }
-                                              
+
 export default Task;

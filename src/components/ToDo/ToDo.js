@@ -3,7 +3,7 @@ import Task from '../Task/Task';
 import AddNewTask from '../AddNewTask/AddNewTask';
 import idGenerator from '../../helpers/idGenerator'
 
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 
 class ToDo extends Component {
@@ -81,7 +81,8 @@ class ToDo extends Component {
             task={task}
             handleDeleteTask={this.handleDeleteTask}
             toggleSetRemoveTasksId={this.toggleSetRemoveTasksId}
-            disabled={!!removeTasks.length} />
+            disabled={!!removeTasks.length}
+            checked={removeTasks.includes(task._id)} />
         </Col>
       )
     })
@@ -93,15 +94,16 @@ class ToDo extends Component {
           disabled={!!removeTasks.length}
           handleSubmit={this.handleSubmit} />
         <div >
-          <Container>
+          <Container className="d-flex flex-wrap-wrap ">
             <Row>
               {Tasks}
             </Row>
             <Row>
               <Col>
-                <button
+                <Button
+                  variant='danger'
                   disabled={!!!removeTasks.length} 
-                  onClick={this.removeSelcdedTasks}>Remove Selecded</button>
+                  onClick={this.removeSelcdedTasks}>Remove Selecded</Button>
               </Col>
             </Row>
           </Container>

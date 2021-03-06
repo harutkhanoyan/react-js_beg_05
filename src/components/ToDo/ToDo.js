@@ -22,7 +22,8 @@ class ToDo extends Component {
         title: "Task3"
       }
     ],
-    removeTasks: []
+    removeTasks: new Set(),
+    isAllChecked: false
   }
 
   handleSubmit = (value) => {
@@ -47,11 +48,11 @@ class ToDo extends Component {
   }
 
   toggleSetRemoveTasksId = (_id) => {
-    let removeTasks = [...this.state.removeTasks];
-    if (removeTasks.includes(_id)) {
-      removeTasks = removeTasks.filter(id => id !== _id);
+    let removeTasks = new Set(this.state.removeTasks);
+    if (removeTasks.has(_id)) {
+      removeTasks.delete(_id)
     } else {
-      removeTasks.push(_id);
+      removeTasks.add(_id);
     }
 
     this.setState({
@@ -61,13 +62,29 @@ class ToDo extends Component {
 
   removeSelcdedTasks = () => {
     let tasks = [...this.state.tasks];
-    const removeTasks = [...this.state.removeTasks];
-    tasks = tasks.filter(item => !removeTasks.includes(item._id));
+    const { removeTasks } = this.state;
+    tasks = tasks.filter(item => !removeTasks.has(item._id));
 
     this.setState({
       tasks,
-      removeTasks: []
+      removeTasks: new Set(),
+      isAllChecked: false
     });
+  }
+
+  handleToggleCHeckAll = () => {
+    const { tasks, isAllChecked } = this.state;
+    let removeTasks = new Set();
+    if (!isAllChecked) {
+      removeTasks = new Set(this.state.removeTasks);
+      tasks.forEach(task => {
+        removeTasks.add(task._id);
+      })
+    }
+    this.setState({
+      removeTasks,
+      isAllChecked: !isAllChecked
+    })
   }
 
   render() {
@@ -81,8 +98,8 @@ class ToDo extends Component {
             task={task}
             handleDeleteTask={this.handleDeleteTask}
             toggleSetRemoveTasksId={this.toggleSetRemoveTasksId}
-            disabled={!!removeTasks.length}
-            checked={removeTasks.includes(task._id)} />
+            disabled={!!removeTasks.size}
+            checked={removeTasks.has(task._id)} />
         </Col>
       )
     })
@@ -91,7 +108,7 @@ class ToDo extends Component {
       <div>
         <h1>ToDo</h1>
         <AddNewTask
-          disabled={!!removeTasks.length}
+          disabled={!!removeTasks.size}
           handleSubmit={this.handleSubmit} />
         <div >
           <Container className="d-flex flex-wrap-wrap ">
@@ -102,8 +119,13 @@ class ToDo extends Component {
               <Col>
                 <Button
                   variant='danger'
-                  disabled={!!!removeTasks.length} 
-                  onClick={this.removeSelcdedTasks}>Remove Selecded</Button>
+                  disabled={!!!removeTasks.size} 
+                  onClick={this.removeSelcdedTasks}>Remove Selected</Button>
+                  <Button 
+                  onClick={this.handleToggleCHeckAll}
+                  disabled={!!!tasks.length} >
+                    {this.state.isAllChecked ? 'Remove All Selected' : 'Select All'}
+                  </Button>
               </Col>
             </Row>
           </Container>

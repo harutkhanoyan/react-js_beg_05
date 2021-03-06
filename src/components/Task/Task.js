@@ -9,12 +9,12 @@ function Task({
   disabled,
   checked
  }) {
-   console.log("render")
   return (
     <div className={`${styles.task} ${checked && styles.checked}`}>
       <input
         type="checkbox"
-        onClick={() => toggleSetRemoveTasksId(task._id)} />
+        onChange={() => toggleSetRemoveTasksId(task._id)}
+        checked={ checked } />
       <p>
         {task.title}
       </p>

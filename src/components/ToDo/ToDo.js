@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Task from '../Task/Task';
 import AddNewTask from '../AddNewTask/AddNewTask';
-import idGenerator from '../../helpers/idGenerator'
+import idGenerator from '../../helpers/idGenerator';
+
 
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
@@ -111,8 +112,8 @@ class ToDo extends Component {
           disabled={!!removeTasks.size}
           handleSubmit={this.handleSubmit} />
         <div >
-          <Container className="d-flex flex-wrap-wrap ">
-            <Row>
+          <Container className="d-flex flex-column " >
+            <Row >
               {Tasks}
             </Row>
             <Row>

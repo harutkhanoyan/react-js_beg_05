@@ -1,6 +1,7 @@
 import React ,{memo} from 'react';
 import styles from './Task.module.css';
 import  {Button}  from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 function Task({
   task,
@@ -24,6 +25,13 @@ function Task({
         onClick={() => handleDeleteTask(task._id)} >Remove</Button>
     </div>
   )
+}
+Task.propTypes = {
+  task: PropTypes.object.isRequired,
+  handleDeleteTask: PropTypes.func.isRequired,
+  toggleSetRemoveTasksId: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  checked: PropTypes.bool.isRequired
 }
 
 export default memo(Task);

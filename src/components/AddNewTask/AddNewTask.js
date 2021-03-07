@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import styles from './AddNewTask.module.css';
 
+import PropTypes from "prop-types";
+
 
 
 
 
 class AddNewTask extends Component {
-  state = {
-    inputValue: ""
+  constructor(props) {
+    super(props);
+    this.inputRef = React.createRef()
+    this.state = {
+      inputValue: ""
+    }
   }
+ 
 
   handleChange = (e) => {
     this.setState({
@@ -27,7 +34,9 @@ class AddNewTask extends Component {
       inputValue: ""
     })
   }
-
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
 
   render() {
 
@@ -41,6 +50,7 @@ class AddNewTask extends Component {
           value={this.state.inputValue}
           onKeyPress={this.handleS}
           disabled={this.props.disabled}
+          ref={this.inputRef}
         />
         <button
           disabled={this.props.disabled}
@@ -50,6 +60,11 @@ class AddNewTask extends Component {
       </div>
     )
   }
+}
+
+AddNewTask.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired
 }
 
 export default AddNewTask;

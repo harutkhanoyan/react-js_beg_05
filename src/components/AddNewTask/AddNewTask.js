@@ -2,61 +2,79 @@ import React, { Component } from 'react';
 import styles from './AddNewTask.module.css';
 
 import PropTypes from "prop-types";
-
-
-
-
-
+import { Form } from 'react-bootstrap';
 class AddNewTask extends Component {
   constructor(props) {
     super(props);
     this.inputRef = React.createRef()
     this.state = {
-      inputValue: ""
+      title: "",
+      description: ""
     }
   }
  
 
   handleChange = (e) => {
+    const { name, value } = e.target;
     this.setState({
-      inputValue: e.target.value,
-    })
+      [name]: value
+    });
   }
 
   handleS = ({ key, type }) => {
     if (type === "keypress" && key !== "Enter") return;
 
-    const { inputValue } = this.state;
+    const { title, description } = this.state;
     const { handleSubmit } = this.props;
+    const formData = {
+      title,
+      description
+    };
 
-    handleSubmit(inputValue);
+    handleSubmit(formData);
     this.setState({
-      inputValue: ""
-    })
+      title: "",
+      description: ""
+    });
   }
   componentDidMount() {
     this.inputRef.current.focus();
   }
 
   render() {
+    const { title, description } = this.state;
+    const { disabled } = this.props;
 
     return (
       <div className="divInput" >
-        <input
+        <Form.Control
           className={styles.inputAdd}
           type="text"
-          placeholder="Add task"
+          placeholder="Title"
           onChange={this.handleChange}
-          value={this.state.inputValue}
+          value={title}
           onKeyPress={this.handleS}
-          disabled={this.props.disabled}
+          disabled={disabled}
           ref={this.inputRef}
+          style={{width: "50%",marginLeft: "25%"}}
+          name="title"
+        />
+        <Form.Control
+        placeholder="Description"
+        onChange={this.handleChange}
+        as="textarea"
+        rows={3}
+        style={{width: "50%",marginLeft: "25%", resize: "none"}}
+        name="description"
+        value={description}
         />
         <button
-          disabled={this.props.disabled}
+          disabled={!(!!title && !!description)}
           className={styles.buttonAdd}
           onClick={this.handleS}
-        >Add</button>
+        >
+          Add
+        </button>
       </div>
     )
   }

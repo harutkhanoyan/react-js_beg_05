@@ -1,28 +1,44 @@
-import React ,{memo} from 'react';
+import React, { memo } from 'react';
 import styles from './Task.module.css';
-import  {Button}  from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 function Task({
   task,
   handleDeleteTask,
   toggleSetRemoveTasksId,
   disabled,
-  checked
- }) {
+  checked,
+  handleSetEditTask
+}) {
   return (
     <div className={`${styles.task} ${checked && styles.checked}`}>
       <input
         type="checkbox"
         onChange={() => toggleSetRemoveTasksId(task._id)}
-        checked={ checked } />
+        checked={checked} />
       <p>
-        {task.title}
+        <span style={{color: "red",fontWeight:"bold"}}>Title:</span> {task.title}
+      </p>
+      <p>
+        <span style={{color: "red",fontWeight:"bold"}} >Description:</span> {task.description}
       </p>
       <Button
-      variant="danger"
+        variant="danger"
         disabled={disabled}
-        onClick={() => handleDeleteTask(task._id)} >Remove</Button>
+        onClick={() => handleDeleteTask(task._id)} >
+           <FontAwesomeIcon icon={faTrash} />
+        </Button>
+      <Button
+        variant="warning"
+        className="ml-3"
+        disabled={disabled}
+        onClick={() => handleSetEditTask(task)}
+      >
+        <FontAwesomeIcon icon={faEdit} />
+      </Button>
     </div>
   )
 }
@@ -31,7 +47,8 @@ Task.propTypes = {
   handleDeleteTask: PropTypes.func.isRequired,
   toggleSetRemoveTasksId: PropTypes.func.isRequired,
   disabled: PropTypes.bool.isRequired,
-  checked: PropTypes.bool.isRequired
+  checked: PropTypes.bool.isRequired,
+  handleSetEditTask: PropTypes.func.isRequired
 }
 
 export default memo(Task);

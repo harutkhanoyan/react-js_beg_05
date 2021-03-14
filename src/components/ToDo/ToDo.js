@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Task from '../Task/Task';
-import AddNewTask from '../AddNewTask/AddNewTask';
+import AddTaskModal from '../AddTaskModal/AddTaskModal';
 import Confirm from '../Confirm/Confirm';
 import idGenerator from '../../helpers/idGenerator';
 import { Container, Row, Col, Button } from 'react-bootstrap';
@@ -30,7 +30,8 @@ class ToDo extends Component {
     removeTasks: new Set(),
     isAllChecked: false,
     isConfirmModal: false,
-    editableTask: null
+    editableTask: null,
+    isOpenAddTaskModal: false
   }
 
   handleSubmit = (formData) => {
@@ -121,13 +122,20 @@ class ToDo extends Component {
     });
   }
 
+  toggleOpenAddTaskModal = () => {
+    this.setState({
+      isOpenAddTaskModal: !this.state.isOpenAddTaskModal
+    })
+  }
+
   render() {
     const {
       tasks,
       removeTasks,
       isAllChecked,
       isConfirmModal,
-      editableTask
+      editableTask,
+      isOpenAddTaskModal
     } = this.state;
     const Tasks = this.state.tasks.map(task => {
       return (
@@ -149,9 +157,12 @@ class ToDo extends Component {
     return (
       <div>
         <h1>ToDo</h1>
-        <AddNewTask
-          disabled={!!removeTasks.size}
-          handleSubmit={this.handleSubmit} />
+          <Button 
+            variant="primary"
+            onClick={this.toggleOpenAddTaskModal}
+          >
+            Add Task
+          </Button>
         <div >
           <Container className="d-flex flex-column " >
             <Row >
@@ -188,12 +199,16 @@ class ToDo extends Component {
               onSubmit={this.handleEditTask}
             />
           }
+          {
+            isOpenAddTaskModal && <AddTaskModal
+              onHide={this.toggleOpenAddTaskModal}
+              handleSubmit={this.handleSubmit}
+            />
+          }
         </div>
       </div>
     )
   }
-
-
 }
 
 export default ToDo;

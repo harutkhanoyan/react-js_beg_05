@@ -6,6 +6,10 @@
   height: 350px;
   color: rgb(143, 86, 86);
   border-radius: 5px;
+  transition: 0.3s;
+}
+.task:hover {
+  transform: scale(1.05);
 }
 
 .checked {

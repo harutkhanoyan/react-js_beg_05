@@ -1,29 +1,61 @@
 import React, { Component } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import PropTypes from "prop-types";
+import { Form, Button, Modal } from 'react-bootstrap';
+import DatePicker from "react-datepicker";
 
-class EditTaskModal extends Component {
+
+class TaskActionsModal extends Component {
   constructor(props) {
     super(props);
+    this.inputRef = React.createRef()  
     this.state = {
-      ...props.editableTask
+      title: "",
+      description: "",
+      ...props.editableTask,
+      date: props.editableTask ? new Date(props.editableTask.date) : new Date()
+      
+
     }
   }
+ 
+
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({
       [name]: value
     });
   }
-  handleS = ({ type, key }) => {
-    if (type === 'keypress' && key !== 'Enter') return;
+
+  handleS = ({ key, type }) => {
+    const { title, description, date } = this.state;
     const { onSubmit, onHide } = this.props;
-    onSubmit(this.state);
+    if (
+      (type === "keypress" && key !== "Enter") ||
+      (!title || !description)
+    ) return;
+
+    const formData = {
+      title,
+      description,
+      date
+    };
+    onSubmit(formData);
     onHide();
 
   }
+  handleSetData = (data) => {
+    this.setState({
+      data
+    })
+  }
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
+
   render() {
+    const { title, description, data } = this.state;
     const { onHide } = this.props;
-    const { title, description } = this.state;
+
     return (
       <Modal
         show={true}
@@ -34,7 +66,7 @@ class EditTaskModal extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Edit Task Modal
+            Add Task Modal
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className="d-flex flex-column align-items-center">
@@ -58,16 +90,27 @@ class EditTaskModal extends Component {
             style={{ width: "70%", resize: "none" }}
             value={description}
           />
+          <DatePicker selected={data} onChange={date => this.handleSetData(date)} />
         </Modal.Body>
         <Modal.Footer>
-
           <Button onClick={onHide} variant="secondary">Close</Button>
-          <Button onClick={this.handleS} variant="primary">Save</Button>
+          <Button
+           onClick={this.handleS}
+           variant="primary"
+           disabled={!!!title || !!!description}
+           >
+             Add
+           </Button>
         </Modal.Footer>
       </Modal>
-    );
-
+    )
   }
 }
 
-export default EditTaskModal;
+TaskActionsModal.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onHide: PropTypes.func.isRequired,
+  editableTask: PropTypes.object
+}
+
+export default TaskActionsModal;

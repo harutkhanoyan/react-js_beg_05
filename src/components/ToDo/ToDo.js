@@ -1,131 +1,154 @@
-import React, { Component } from 'react';
-import Task from '../Task/Task';
-import AddTaskModal from '../AddTaskModal/AddTaskModal';
-import Confirm from '../Confirm/Confirm';
-import idGenerator from '../../helpers/idGenerator';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import EditTaskModal from '../EditTaskModal/EditTaskModal';
-
+import React, { Component } from "react";
+import Task from "../Task/Task";
+import AddTaskModal from "../TaskActionsModal/TaskActionsModal";
+import Confirm from "../Confirm/Confirm";
+import dateFormmatter from "../../helpers/data";
+import { Container, Row, Col, Button } from "react-bootstrap";
 
 class ToDo extends Component {
   state = {
-    tasks: [
-      {
-        _id: idGenerator(),
-        title: "Task1",
-        description: "smasdmfasmdf,sasdlmflasdmf"
-      },
-      {
-        _id: idGenerator(),
-        title: "Task2",
-        description: "smasdmfasmdf,sasdlmflasdmf"
-
-      },
-      {
-        _id: idGenerator(),
-        title: "Task3",
-        description: "smasdmfasmdf,sasdlmflasdmf"
-      }
-    ],
+    tasks: [],
     removeTasks: new Set(),
     isAllChecked: false,
     isConfirmModal: false,
     editableTask: null,
-    isOpenAddTaskModal: false
-  }
+    isOpenAddTaskModal: false,
+  };
 
   handleSubmit = (formData) => {
     if (!formData.title || !formData.description) return;
+    formData.date = dateFormmatter(formData.date);
     const tasks = [...this.state.tasks];
-    tasks.push({
-      _id: idGenerator(),
-      title: formData.title,
-      description: formData.description
-    });
-    this.setState({
-      tasks
-    });
-  }
+    fetch("http://localhost:3001/task", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw data.error;
+        }
+        tasks.push(data);
+        this.setState({
+          tasks,
+        });
+      })
+      .catch((error) => {
+        console.log("catch Error", error);
+      });
+  };
 
   handleDeleteTask = (id) => {
     let tasks = [...this.state.tasks];
-    tasks = tasks.filter(item => item._id !== id)
+    tasks = tasks.filter((item) => item._id !== id);
 
     this.setState({
-      tasks
+      tasks,
     });
-  }
+  };
 
   toggleSetRemoveTasksId = (_id) => {
     let removeTasks = new Set(this.state.removeTasks);
     if (removeTasks.has(_id)) {
-      removeTasks.delete(_id)
+      removeTasks.delete(_id);
     } else {
       removeTasks.add(_id);
     }
 
     this.setState({
-      removeTasks
+      removeTasks,
     });
-  }
+  };
 
   removeSelcdedTasks = () => {
-    let tasks = [...this.state.tasks];
-    const { removeTasks } = this.state;
-    tasks = tasks.filter(item => !removeTasks.has(item._id));
+    fetch("http://localhost:3001/task", {
+      method: "PATCH",
+      body: JSON.stringify({ tasks: Array.from(this.state.removeTasks) }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw data.error;
+        }
+        let tasks = [...this.state.tasks];
+        const { removeTasks } = this.state;
+        tasks = tasks.filter((item) => !removeTasks.has(item._id));
 
-    this.setState({
-      tasks,
-      removeTasks: new Set(),
-      isAllChecked: false
-    });
-  }
+        this.setState({
+          tasks,
+          removeTasks: new Set(),
+          isAllChecked: false,
+        });
+      });
+  };
 
   handleToggleCHeckAll = () => {
     const { tasks, isAllChecked } = this.state;
     let removeTasks = new Set();
     if (!isAllChecked) {
       removeTasks = new Set(this.state.removeTasks);
-      tasks.forEach(task => {
+      tasks.forEach((task) => {
         removeTasks.add(task._id);
-      })
+      });
     }
     this.setState({
       removeTasks,
-      isAllChecked: !isAllChecked
-    })
-  }
+      isAllChecked: !isAllChecked,
+    });
+  };
 
   handleToggleOpenModal = () => {
     this.setState({
-      isConfirmModal: !this.state.isConfirmModal
-    })
-  }
+      isConfirmModal: !this.state.isConfirmModal,
+    });
+  };
 
   handleSetEditTask = (task) => {
     this.setState({
-      editableTask: task
-    })
-  }
+      editableTask: task,
+    });
+  };
   setEditableTaskNull = () => {
     this.setState({
-        editableTask: null
+      editableTask: null,
     });
-  }
+  };
 
   handleEditTask = (editTask) => {
     const tasks = [...this.state.tasks];
-    const idx = tasks.findIndex(task => task._id === editTask._id);
+    const idx = tasks.findIndex((task) => task._id === editTask._id);
     tasks[idx] = editTask;
     this.setState({
-      tasks
+      tasks,
     });
-  }
+  };
 
   toggleOpenAddTaskModal = () => {
     this.setState({
-      isOpenAddTaskModal: !this.state.isOpenAddTaskModal
-    })
+      isOpenAddTaskModal: !this.state.isOpenAddTaskModal,
+    });
+  };
+
+  componentDidMount() {
+    fetch("http://localhost:3001/task")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw data.error;
+        }
+        this.setState({
+          tasks: data,
+        });
+      })
+      .catch((error) => {
+        console.log("Get Tasks Request Error", error);
+      });
   }
 
   render() {
@@ -135,13 +158,11 @@ class ToDo extends Component {
       isAllChecked,
       isConfirmModal,
       editableTask,
-      isOpenAddTaskModal
+      isOpenAddTaskModal,
     } = this.state;
-    const Tasks = this.state.tasks.map(task => {
+    const Tasks = this.state.tasks.map((task) => {
       return (
-        <Col
-          key={task._id}
-        >
+        <Col key={task._id}>
           <Task
             task={task}
             handleDeleteTask={this.handleDeleteTask}
@@ -151,28 +172,26 @@ class ToDo extends Component {
             handleSetEditTask={this.handleSetEditTask}
           />
         </Col>
-      )
+      );
     });
 
     return (
       <div>
         <h1>ToDo</h1>
-          <Button 
-            className="buttonAdd"
-            variant="primary"
-            onClick={this.toggleOpenAddTaskModal}
-          >
-            Add Task
-          </Button>
-        <div >
-          <Container className="d-flex flex-column " >
-            <Row >
-              {Tasks}
-            </Row>
+        <Button
+          className="buttonAdda"
+          variant="primary"
+          onClick={this.toggleOpenAddTaskModal}
+        >
+          Add Task
+        </Button>
+        <div>
+          <Container className="d-flex flex-column ">
+            <Row>{Tasks}</Row>
             <Row>
               <Col>
                 <Button
-                  variant='danger'
+                  variant="danger"
                   disabled={!!!removeTasks.size}
                   onClick={this.handleToggleOpenModal}
                 >
@@ -180,35 +199,38 @@ class ToDo extends Component {
                 </Button>
                 <Button
                   onClick={this.handleToggleCHeckAll}
-                  disabled={!!!tasks.length} >
-                  {isAllChecked ? 'Remove All Selected' : 'Select All'}
+                  disabled={!!!tasks.length}
+                >
+                  {isAllChecked ? "Remove All Selected" : "Select All"}
                 </Button>
               </Col>
             </Row>
           </Container>
-          {
-            isConfirmModal && <Confirm
+          {isConfirmModal && (
+            <Confirm
               onHide={this.handleToggleOpenModal}
               onSubmit={this.removeSelcdedTasks}
               massage={`Do you wont to delete ${removeTasks.size} task?`}
             />
-          }
-          {
-            editableTask && <EditTaskModal
+          )}
+          {editableTask && (
+            <AddTaskModal
               editableTask={editableTask}
               onHide={this.setEditableTaskNull}
               onSubmit={this.handleEditTask}
             />
-          }
-          {
-            isOpenAddTaskModal && <AddTaskModal
+          )}
+          {isOpenAddTaskModal && (
+            <AddTaskModal
+              // onHide={this.toggleOpenAddTaskModal}
+              // handleSubmit={this.handleSubmit}
               onHide={this.toggleOpenAddTaskModal}
-              handleSubmit={this.handleSubmit}
+              onSubmit={this.handleSubmit}
             />
-          }
+          )}
         </div>
       </div>
-    )
+    );
   }
 }
 

@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import dateFormmatter from '../../helpers/data';
 
 function Task({
   task,
@@ -25,6 +26,13 @@ function Task({
       <p>
         <span style={{color: "red",fontWeight:"bold"}} >Description:</span> {task.description}
       </p>
+      <p>
+        <span style={{color: "red",fontWeight:"bold"}} >Date:</span> {dateFormmatter(new Date(task.date))}
+      </p>
+      <p>
+        <span style={{color: "red",fontWeight:"bold"}} >Created_AT:</span> {dateFormmatter(new Date(task.created_at))}
+      </p>
+
       <Button
         variant="danger"
         disabled={disabled}

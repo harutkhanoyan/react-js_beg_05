@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import Task from "../Task/Task";
-import AddTaskModal from "../TaskActionsModal/TaskActionsModal";
-import Confirm from "../Confirm/Confirm";
-import dateFormmatter from "../../helpers/data";
+import Task from "../../Task/Task";
+import AddTaskModal from "../../TaskActionsModal/TaskActionsModal";
+import Confirm from "../../Confirm/Confirm";
+import dateFormmatter from "../../../helpers/data";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
 class ToDo extends Component {
@@ -41,13 +41,25 @@ class ToDo extends Component {
       });
   };
 
-  handleDeleteTask = (id) => {
-    let tasks = [...this.state.tasks];
-    tasks = tasks.filter((item) => item._id !== id);
+  handleDeleteTask = (_id) => {
+    fetch("http://localhost:3001/task/" + _id, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw data.error;
+        }
+        let tasks = [...this.state.tasks];
+        tasks = tasks.filter((item) => item._id !== _id);
 
-    this.setState({
-      tasks,
-    });
+        this.setState({
+          tasks,
+        });
+      })
+      .catch((error) => {
+        console.log("Delete Task Request Eroror", error);
+      });
   };
 
   toggleSetRemoveTasksId = (_id) => {
@@ -121,12 +133,28 @@ class ToDo extends Component {
   };
 
   handleEditTask = (editTask) => {
-    const tasks = [...this.state.tasks];
-    const idx = tasks.findIndex((task) => task._id === editTask._id);
-    tasks[idx] = editTask;
-    this.setState({
-      tasks,
-    });
+    fetch("http://localhost:3001/task/" + editTask._id, {
+      method: "PUT",
+      body: JSON.stringify(editTask),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          throw data.error;
+        }
+        const tasks = [...this.state.tasks];
+        const idx = tasks.findIndex((task) => task._id === data._id);
+        tasks[idx] = data;
+        this.setState({
+          tasks,
+        });
+      })
+      .catch((error) => {
+        console.error("Edit Task Request", error);
+      });
   };
 
   toggleOpenAddTaskModal = () => {

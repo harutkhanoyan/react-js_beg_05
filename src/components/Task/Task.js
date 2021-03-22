@@ -27,10 +27,10 @@ function Task({
         <span style={{color: "red",fontWeight:"bold"}} >Description:</span> {task.description}
       </p>
       <p>
-        <span style={{color: "red",fontWeight:"bold"}} >Date:</span> {dateFormmatter(new Date(task.date))}
+        <span style={{color: "red",fontWeight:"bold"}} >Date:</span> {dateFormmatter(task.date)}
       </p>
       <p>
-        <span style={{color: "red",fontWeight:"bold"}} >Created_AT:</span> {dateFormmatter(new Date(task.created_at))}
+        <span style={{color: "red",fontWeight:"bold"}} >Created_AT:</span> {dateFormmatter(task.created_at)}
       </p>
 
       <Button

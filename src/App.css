@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -7,7 +7,6 @@
 .container {
   display: flex;
   justify-content: space-evenly;
-
 }
 
 .img {
@@ -22,12 +21,18 @@
 h1 {
   text-align: center;
 }
-.divInput{
+.divInput {
   text-align: center;
 }
 Col {
   width: 200px;
 }
-.buttonAdd{
+.buttonAdd {
   margin-left: 720px;
+}
+.nav-item {
+  padding: 10px 15px;
+}
+a:hover {
+  text-decoration: none;
 }

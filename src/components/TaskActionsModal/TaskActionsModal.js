@@ -1,53 +1,44 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form, Button, Modal } from 'react-bootstrap';
+import { Form, Button, Modal } from "react-bootstrap";
 import DatePicker from "react-datepicker";
-
+import dateFormmatter from "../../helpers/data";
 
 class TaskActionsModal extends Component {
   constructor(props) {
     super(props);
-    this.inputRef = React.createRef()  
+    this.inputRef = React.createRef();
     this.state = {
       title: "",
       description: "",
       ...props.editableTask,
-      date: props.editableTask ? new Date(props.editableTask.date) : new Date()
-      
-
-    }
+      date: props.editableTask ? new Date(props.editableTask.date) : new Date(),
+    };
   }
- 
 
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
     });
-  }
+  };
 
   handleS = ({ key, type }) => {
-    const { title, description, date } = this.state;
+    const { title, description } = this.state;
     const { onSubmit, onHide } = this.props;
-    if (
-      (type === "keypress" && key !== "Enter") ||
-      (!title || !description)
-    ) return;
+    if ((type === "keypress" && key !== "Enter") || !title || !description)
+      return;
 
-    const formData = {
-      title,
-      description,
-      date
-    };
+    const formData = { ...this.state };
+    formData.date = dateFormmatter(formData.date);
     onSubmit(formData);
     onHide();
-
-  }
+  };
   handleSetData = (data) => {
     this.setState({
-      data
-    })
-  }
+      data,
+    });
+  };
   componentDidMount() {
     this.inputRef.current.focus();
   }
@@ -90,27 +81,32 @@ class TaskActionsModal extends Component {
             style={{ width: "70%", resize: "none" }}
             value={description}
           />
-          <DatePicker selected={data} onChange={date => this.handleSetData(date)} />
+          <DatePicker
+            selected={data}
+            onChange={(date) => this.handleSetData(date)}
+          />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onHide} variant="secondary">Close</Button>
+          <Button onClick={onHide} variant="secondary">
+            Close
+          </Button>
           <Button
-           onClick={this.handleS}
-           variant="primary"
-           disabled={!!!title || !!!description}
-           >
-             Add
-           </Button>
+            onClick={this.handleS}
+            variant="primary"
+            disabled={!!!title || !!!description}
+          >
+            {this.props.editableTask ? "Save" : "Add"}
+          </Button>
         </Modal.Footer>
       </Modal>
-    )
+    );
   }
 }
 
 TaskActionsModal.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onHide: PropTypes.func.isRequired,
-  editableTask: PropTypes.object
-}
+  editableTask: PropTypes.object,
+};
 
 export default TaskActionsModal;

@@ -207,7 +207,7 @@ class ToDo extends Component {
       <div>
         <h1>ToDo</h1>
         <Button
-          className="buttonAdda"
+          className="buttonAdd"
           variant="primary"
           onClick={this.toggleOpenAddTaskModal}
         >

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import dateFormmatter from '../../helpers/data';
+import { Link } from 'react-router-dom';
 
 function Task({
   task,
@@ -20,9 +21,9 @@ function Task({
         type="checkbox"
         onChange={() => toggleSetRemoveTasksId(task._id)}
         checked={checked} />
-      <p>
+      <Link to={`/task/${task._id}`}>
         <span style={{color: "red",fontWeight:"bold"}}>Title:</span> {task.title}
-      </p>
+      </Link>
       <p>
         <span style={{color: "red",fontWeight:"bold"}} >Description:</span> {task.description}
       </p>

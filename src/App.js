@@ -7,17 +7,46 @@ import About from "./components/pages/About/About";
 import NotFound from "./components/pages/NotFound/NotFound";
 import SingleTask from "./components/pages/SingleTask/SingleTask";
 
+const pages = [
+  {
+    path: "/",
+    component: ToDo
+  },
+  {
+    path: "/contact",
+    component: Contact
+  },
+  {
+    path: "/about",
+    component: About
+  },
+  {
+    path: "/task/:id",
+    component: SingleTask
+  },
+  {
+    path: "/404",
+    component: NotFound
+  }
+]
+
 function App() {
+  const pageRoutes = pages.map((page, index) => {
+    return (
+      <Route
+        key={index}
+        path={page.path}
+        component={page.component}
+        exact
+      />
+    )
+  })
   return (
     <div>
       <NavBar />
       <Switch>
-        <Route path="/" component={ToDo} exact />
-        <Route path="/contact" component={Contact} exact />
-        <Route path="/about" component={About}  exact />
-        <Route path="/404" component={NotFound} exact />
-        <Route path="/task/:id" component={SingleTask} exact />
-        <Redirect to="/404" />
+       {pageRoutes}
+       <Redirect to="/404" />
       </Switch>
     </div>
   );

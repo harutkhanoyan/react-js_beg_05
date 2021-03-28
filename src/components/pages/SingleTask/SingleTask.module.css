@@ -11,3 +11,11 @@
   word-break: break-word;
   box-shadow: 0 10px 20px rgb(0 0 0 / 20%);
 }
+.button {
+  background-color:blue;
+  width: 100px;
+  height: 37px;
+  border: none;
+  color:azure;
+  border-radius: 5%;
+}

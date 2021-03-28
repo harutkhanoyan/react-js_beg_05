@@ -13,6 +13,7 @@ class ToDo extends Component {
     isConfirmModal: false,
     editableTask: null,
     isOpenAddTaskModal: false,
+    loading: false,
   };
 
   handleSubmit = (formData) => {
@@ -164,6 +165,9 @@ class ToDo extends Component {
   };
 
   componentDidMount() {
+    this.setState({
+      loading: true,
+    });
     fetch("http://localhost:3001/task")
       .then((res) => res.json())
       .then((data) => {
@@ -172,10 +176,14 @@ class ToDo extends Component {
         }
         this.setState({
           tasks: data,
+          loading: false
         });
       })
       .catch((error) => {
         console.log("Get Tasks Request Error", error);
+        this.state({
+          loading: false
+        })
       });
   }
 
@@ -187,7 +195,11 @@ class ToDo extends Component {
       isConfirmModal,
       editableTask,
       isOpenAddTaskModal,
+      loading,
     } = this.state;
+
+    if (loading) return <div>Loading... </div>;
+
     const Tasks = this.state.tasks.map((task) => {
       return (
         <Col key={task._id}>

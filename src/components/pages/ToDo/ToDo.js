@@ -4,6 +4,7 @@ import AddTaskModal from "../../TaskActionsModal/TaskActionsModal";
 import Confirm from "../../Confirm/Confirm";
 import dateFormmatter from "../../../helpers/data";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import Loader from "../../Loader/Loader";
 
 class ToDo extends Component {
   state = {
@@ -19,6 +20,7 @@ class ToDo extends Component {
   handleSubmit = (formData) => {
     if (!formData.title || !formData.description) return;
     formData.date = dateFormmatter(formData.date);
+    this.setState({ loading: true });
     const tasks = [...this.state.tasks];
     fetch("http://localhost:3001/task", {
       method: "POST",
@@ -39,10 +41,14 @@ class ToDo extends Component {
       })
       .catch((error) => {
         console.log("catch Error", error);
+      })
+      .finally(() => {
+        this.setState({ loading: false });
       });
   };
 
   handleDeleteTask = (_id) => {
+    this.setState({ loading: true });
     fetch("http://localhost:3001/task/" + _id, {
       method: "DELETE",
     })
@@ -60,6 +66,9 @@ class ToDo extends Component {
       })
       .catch((error) => {
         console.log("Delete Task Request Eroror", error);
+      })
+      .finally(() => {
+        this.setState({ loading: false });
       });
   };
 
@@ -77,6 +86,7 @@ class ToDo extends Component {
   };
 
   removeSelcdedTasks = () => {
+    this.setState({ loading: true });
     fetch("http://localhost:3001/task", {
       method: "PATCH",
       body: JSON.stringify({ tasks: Array.from(this.state.removeTasks) }),
@@ -92,12 +102,17 @@ class ToDo extends Component {
         let tasks = [...this.state.tasks];
         const { removeTasks } = this.state;
         tasks = tasks.filter((item) => !removeTasks.has(item._id));
-
         this.setState({
           tasks,
           removeTasks: new Set(),
           isAllChecked: false,
         });
+      })
+      .catch((error) => {
+        console.log("Delete Task Request Eroror", error);
+      })
+      .finally(() => {
+        this.setState({ loading: false });
       });
   };
 
@@ -134,6 +149,7 @@ class ToDo extends Component {
   };
 
   handleEditTask = (editTask) => {
+    this.setState({ loading: true });
     fetch("http://localhost:3001/task/" + editTask._id, {
       method: "PUT",
       body: JSON.stringify(editTask),
@@ -155,6 +171,9 @@ class ToDo extends Component {
       })
       .catch((error) => {
         console.error("Edit Task Request", error);
+      })
+      .finally(() => {
+        this.setState({ loading: false });
       });
   };
 
@@ -176,14 +195,14 @@ class ToDo extends Component {
         }
         this.setState({
           tasks: data,
-          loading: false
+          loading: false,
         });
       })
       .catch((error) => {
         console.log("Get Tasks Request Error", error);
         this.state({
-          loading: false
-        })
+          loading: false,
+        });
       });
   }
 
@@ -198,7 +217,7 @@ class ToDo extends Component {
       loading,
     } = this.state;
 
-    if (loading) return <div>Loading... </div>;
+    if (loading) return <Loader />;
 
     const Tasks = this.state.tasks.map((task) => {
       return (

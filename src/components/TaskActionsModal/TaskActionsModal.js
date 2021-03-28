@@ -13,6 +13,7 @@ class TaskActionsModal extends Component {
       description: "",
       ...props.editableTask,
       date: props.editableTask ? new Date(props.editableTask.date) : new Date(),
+      loading: false
     };
   }
 
